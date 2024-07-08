@@ -1,5 +1,4 @@
-
-/*const User = require('../models/User');
+const pool = require('../config/db');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
@@ -7,22 +6,21 @@ const registerUser = async (req, res) => {
   try {
     const { name, email, password } = req.body;
 
-    // Check if user exists
-    const existingUser = await User.findByEmail(email);
-    if (existingUser) {
+    const existingUser = await pool.query('SELECT * FROM users WHERE email = $1', [email]);
+    if (existingUser.rows.length > 0) {
       return res.status(400).json({ message: 'User already exists' });
     }
 
-    // Hash password
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
-    // Create user
-    const newUser = await User.create({ name, email, password: hashedPassword });
-    
-    // Generate token
-    const token = jwt.sign({ id: newUser.id }, process.env.JWT_SECRET, { expiresIn: '1h' });
-    
+    const newUser = await pool.query(
+      'INSERT INTO users (name, email, password) VALUES ($1, $2, $3) RETURNING *',
+      [name, email, hashedPassword]
+    );
+
+    const token = jwt.sign({ id: newUser.rows[0].id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+
     res.status(201).json({ token });
   } catch (err) {
     res.status(500).json({ message: err.message });
@@ -33,21 +31,18 @@ const loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    // Check if user exists
-    const user = await User.findByEmail(email);
-    if (!user) {
+    const user = await pool.query('SELECT * FROM users WHERE email = $1', [email]);
+    if (user.rows.length === 0) {
       return res.status(400).json({ message: 'Invalid credentials' });
     }
 
-    // Validate password
-    const isMatch = await bcrypt.compare(password, user.password);
+    const isMatch = await bcrypt.compare(password, user.rows[0].password);
     if (!isMatch) {
       return res.status(400).json({ message: 'Invalid credentials' });
     }
 
-    // Generate token
-    const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: '1h' });
-    
+    const token = jwt.sign({ id: user.rows[0].id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+
     res.status(200).json({ token });
   } catch (err) {
     res.status(500).json({ message: err.message });
@@ -55,30 +50,12 @@ const loginUser = async (req, res) => {
 };
 
 const getUser = async (req, res) => {
-  try {
-    const user = await User.findById(req.user.id);
-    res.json(user);
-  } catch (err) {
-    res.status(500).json({ message: err.message });
-  }
-};
+    try {
+      const user = await pool.query('SELECT * FROM users WHERE id = $1', [req.user.id]);
+      res.json(user.rows[0]);
+    } catch (err) {
+      res.status(500).json({ message: err.message });
+    }
+  };
 
-
-module.exports = { registerUser, loginUser, getUser};*/
-
-
-const pool = require('../config/db');
-
-const testConnection = async (req, res) => {
-  try {
-    const result = await pool.query('SELECT NOW()');
-    res.json(result.rows);
-  } catch (err) {
-    res.status(500).json({ message: err.message });
-  }
-};
-
-module.exports = { testConnection };
-
-
-
+module.exports = { registerUser, loginUser, getUser };
