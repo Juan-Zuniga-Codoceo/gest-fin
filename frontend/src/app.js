@@ -1,5 +1,5 @@
 import React from 'react';
-import { Route, Switch } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import Register from './pages/Register';
@@ -13,7 +13,7 @@ import Footer from './components/Shared/Footer';
 
 const App = () => {
   return (
-    <>
+    <Router>
       <Navbar />
       <Switch>
         <Route exact path="/" component={Home} />
@@ -26,7 +26,7 @@ const App = () => {
         <Route component={NotFound} />
       </Switch>
       <Footer />
-    </>
+    </Router>
   );
 };
 
