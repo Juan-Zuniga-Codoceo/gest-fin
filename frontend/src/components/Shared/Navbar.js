@@ -1,19 +1,20 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { AppBar, Toolbar, Typography, Button, IconButton } from '@mui/material';
+import MenuIcon from '@mui/icons-material/Menu';
 
 const Navbar = () => {
   return (
-    <nav>
-      <ul>
-        <li><Link to="/">Home</Link></li>
-        <li><Link to="/login">Login</Link></li>
-        <li><Link to="/register">Register</Link></li>
-        <li><Link to="/profile">Profile</Link></li>
-        <li><Link to="/budget">Budget</Link></li>
-        <li><Link to="/expenses">Expenses</Link></li>
-        <li><Link to="/reminder">Reminder</Link></li>
-      </ul>
-    </nav>
+    <AppBar position="static">
+      <Toolbar>
+        <IconButton edge="start" color="inherit" aria-label="menu">
+          <MenuIcon />
+        </IconButton>
+        <Typography variant="h6" style={{ flexGrow: 1 }}>
+          Finanzas
+        </Typography>
+        <Button color="inherit">Login</Button>
+      </Toolbar>
+    </AppBar>
   );
 };
 

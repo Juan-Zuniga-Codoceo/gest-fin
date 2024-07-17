@@ -1,14 +1,18 @@
-const webpack = require('webpack');
+const { override, addBabelPlugins, addWebpackAlias } = require('customize-cra');
+const path = require('path');
 
-module.exports = function override(config, env) {
-  config.plugins = (config.plugins || []).concat([
-    new webpack.ProvidePlugin({
-      process: 'process/browser',
-    }),
-    new webpack.DefinePlugin({
-      'process.env': JSON.stringify(process.env)
-    })
-  ]);
-
-  return config;
-};
+module.exports = override(
+  addWebpackAlias({
+    process: 'process/browser',
+    stream: 'stream-browserify',
+    zlib: 'browserify-zlib',
+    util: 'util',
+    buffer: 'buffer',
+    assert: 'assert',
+  }),
+  addBabelPlugins(
+    ['@babel/plugin-transform-class-properties', { loose: true }],
+    ['@babel/plugin-transform-private-methods', { loose: true }],
+    ['@babel/plugin-transform-private-property-in-object', { loose: true }]
+  )
+);

@@ -1,9 +1,11 @@
+// src/components/Shared/Footer.js
 import React from 'react';
+import './Footer.css';
 
 const Footer = () => {
   return (
-    <footer>
-      <p>© 2024 Gestión Financiera</p>
+    <footer className="footer">
+      <p>&copy; 2024 Gestión Financiera. Todos los derechos reservados.</p>
     </footer>
   );
 };
