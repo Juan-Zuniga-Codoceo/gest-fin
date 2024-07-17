@@ -3,7 +3,7 @@ import React from 'react';
 const Footer = () => {
   return (
     <footer>
-      <p>© 2024 Financial Management App</p>
+      <p>© 2024 Gestión Financiera</p>
     </footer>
   );
 };

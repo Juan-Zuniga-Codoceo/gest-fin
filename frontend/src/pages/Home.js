@@ -3,8 +3,7 @@ import React from 'react';
 const Home = () => {
   return (
     <div>
-      <h1>Home Page</h1>
-      <p>Welcome to the Financial Management App</p>
+      <h1>Welcome to Gestión Financiera</h1>
     </div>
   );
 };
