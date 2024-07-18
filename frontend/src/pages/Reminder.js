@@ -1,31 +1,15 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import React from 'react';
 
-const Reminder = () => {
-  const [reminders, setReminders] = useState([]);
-
-  useEffect(() => {
-    const fetchReminders = async () => {
-      const token = localStorage.getItem('token');
-      try {
-        const response = await axios.get('http://localhost:3000/api/reminders', {
-          headers: { Authorization: `Bearer ${token}` }
-        });
-        setReminders(response.data);
-      } catch (error) {
-        console.error('Error fetching reminders:', error);
-      }
-    };
-    fetchReminders();
-  }, []);
+const Reminders = ({ reminders }) => {
+  if (!reminders.length) return <div>Cargando recordatorios...</div>;
 
   return (
     <div>
-      <h1>Reminder Page</h1>
+      <h2>Recordatorios</h2>
       <ul>
         {reminders.map((reminder) => (
           <li key={reminder.id}>
-            {reminder.title} - {new Date(reminder.remindAt).toLocaleString()}
+            {reminder.title}: {new Date(reminder.remind_at).toLocaleString()}
           </li>
         ))}
       </ul>
@@ -33,4 +17,4 @@ const Reminder = () => {
   );
 };
 
-export default Reminder;
+export default Reminders;

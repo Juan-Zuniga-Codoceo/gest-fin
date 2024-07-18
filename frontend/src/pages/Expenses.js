@@ -1,10 +1,18 @@
 import React from 'react';
 
-const Expenses = () => {
+const Expenses = ({ expenses }) => {
+  if (!expenses.length) return <div>Cargando gastos...</div>;
+
   return (
     <div>
-      <h1>Expenses Page</h1>
-      <p>Track your expenses here.</p>
+      <h2>Gastos</h2>
+      <ul>
+        {expenses.map((expense) => (
+          <li key={expense.id}>
+            {expense.description}: {expense.amount}
+          </li>
+        ))}
+      </ul>
     </div>
   );
 };
